@@ -46,6 +46,7 @@ content:
       - { name: instagram, label: Instagram-ის სახელი, type: string }
       - { name: address, label: მისამართი, type: string }
       - { name: hours, label: სამუშაო საათები, type: string }
+      - { name: delivery_fee, label: მიტანის საფასური (₾), type: number }
       - { name: email, label: ელფოსტა, type: string }
       - { name: about, label: „ჩვენ შესახებ“ ტექსტი, type: text }
       - { name: delivery_note, label: "მიტანის შენიშვნა (ჩანს თარიღის ქვეშ; ცარიელი = დამალულია)", type: string }
