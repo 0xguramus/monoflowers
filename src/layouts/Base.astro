@@ -8,28 +8,32 @@ const { title, description = SITE.tagline } = Astro.props;
 <title>{title ? `${title} — ${SITE.name}` : SITE.name}</title>
 <meta name="description" content={description} />
 <meta name="theme-color" content="#f7f1ec" />
+<script is:inline>(function(){var t=localStorage.getItem("theme");if(!t)t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})()</script>
 <link rel="icon" href="/favicon.svg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Georgian:wght@400;600&family=Noto+Sans+Georgian:wght@400;500&display=swap" rel="stylesheet" />
 </head><body>
 <header class="top"><a href="/" class="logo">Mono<span>Flowers</span></a>
-<nav><a href="/catalog/">კატალოგი</a><a href="/about/">ჩვენ შესახებ</a></nav></header>
+<nav><a href="/catalog/">კატალოგი</a><a href="/about/">ჩვენ შესახებ</a><button id="theme" class="tbtn" aria-label="მუქი/ღია რეჟიმი" title="მუქი/ღია რეჟიმი">◐</button></nav></header>
 <main><slot /></main>
 <footer><p class="logo">Mono<span>Flowers</span></p><p>{SITE.address} · {SITE.hours}</p>
 <p><a href={`tel:${SITE.phone}`}>{SITE.phone}</a> · <a href={`https://instagram.com/${SITE.instagram}`}>Instagram</a></p>
 <p class="muted">© {new Date().getFullYear()} {SITE.name}</p></footer>
+<script is:inline>document.getElementById("theme").onclick=function(){var d=document.documentElement,t=d.dataset.theme==="dark"?"light":"dark";d.dataset.theme=t;localStorage.setItem("theme",t);document.querySelector('meta[name=theme-color]').content=t==="dark"?"#1c1817":"#f7f1ec"}</script>
 </body></html>
 <style is:global>
-:root{--bg:#f7f1ec;--card:#fff;--ink:#2f2a28;--muted:#8a7f79;--rose:#b5566b;--sage:#7c8f74;--r:18px}
+:root{--bg:#f7f1ec;--card:#fff;--ink:#2f2a28;--muted:#8a7f79;--rose:#b5566b;--sage:#7c8f74;--r:18px;--line:var(--line);--glass:var(--glass);--chip-on-ink:#fff;--badge:#f3e3e6;--shadow:rgba(80,50,40,.06);--pill:rgba(255,255,255,.9)}
+[data-theme=dark]{--bg:#1c1817;--card:#28221f;--ink:#f1e8e3;--muted:#a89c95;--rose:#e08a9c;--sage:#9fb396;--line:#3a322e;--glass:rgba(28,24,23,.92);--chip-on-ink:#1c1817;--badge:#3d2a2f;--shadow:rgba(0,0,0,.35);--pill:rgba(40,34,31,.9);color-scheme:dark}
+.tbtn{margin-left:14px;background:none;border:1px solid var(--line);color:var(--ink);border-radius:999px;width:34px;height:34px;font-size:17px;cursor:pointer;vertical-align:middle}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 'Noto Sans Georgian',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
 h1,h2,h3,.logo{font-family:'Noto Serif Georgian',serif;font-weight:600;line-height:1.25}
 a{color:inherit}main{max-width:1100px;margin:0 auto;padding:0 18px 40px}
-.top{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:14px 18px;padding-top:max(14px,env(safe-area-inset-top));background:rgba(247,241,236,.92);backdrop-filter:blur(8px);border-bottom:1px solid #eadfd7}
+.top{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:14px 18px;padding-top:max(14px,env(safe-area-inset-top));background:rgba(247,241,236,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
 .top nav a{margin-left:16px;text-decoration:none;font-size:15px}.logo{text-decoration:none;font-size:20px;margin:0}.logo span{color:var(--rose)}
-footer{text-align:center;padding:32px 18px calc(32px + env(safe-area-inset-bottom));border-top:1px solid #eadfd7;font-size:14px}.muted{color:var(--muted)}
+footer{text-align:center;padding:32px 18px calc(32px + env(safe-area-inset-bottom));border-top:1px solid var(--line);font-size:14px}.muted{color:var(--muted)}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}@media(min-width:760px){.grid{grid-template-columns:repeat(3,1fr);gap:22px}}
 .btn{display:block;text-align:center;padding:14px;border-radius:999px;text-decoration:none;font-weight:500;margin:8px 0}
 .btn.wa{background:#25d366;color:#fff}.btn.ph{background:var(--rose);color:#fff}.btn.ig{border:1.5px solid var(--ink)}
-.chips{display:flex;gap:8px;overflow-x:auto;padding:4px 0 14px}.chips a{white-space:nowrap;padding:8px 14px;border-radius:999px;background:var(--card);text-decoration:none;font-size:14px;border:1px solid #eadfd7}.chips a.on{background:var(--ink);color:#fff}
-.badge{display:inline-block;font-size:12px;padding:2px 10px;border-radius:999px;background:#f3e3e6;color:var(--rose)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:4px 0 14px}.chips a{white-space:nowrap;padding:8px 14px;border-radius:999px;background:var(--card);text-decoration:none;font-size:14px;border:1px solid var(--line)}.chips a.on{background:var(--ink);color:var(--chip-on-ink)}
+.badge{display:inline-block;font-size:12px;padding:2px 10px;border-radius:999px;background:var(--badge);color:var(--rose)}
 </style>
