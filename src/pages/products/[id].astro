@@ -28,7 +28,7 @@ const url = new URL(`/products/${p.id}/`, Astro.site).href;
 <style>
 .wrap{display:grid;gap:20px;margin-top:16px}@media(min-width:760px){.wrap{grid-template-columns:1.1fr 1fr;gap:36px}}
 .gallery{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;border-radius:var(--r)}
-.gallery img{flex:0 0 100%;width:100%;aspect-ratio:4/5;object-fit:cover;scroll-snap-align:start;border-radius:var(--r)}
+.gallery img{flex:0 0 100%;width:100%;aspect-ratio:1/1;object-fit:cover;scroll-snap-align:start;border-radius:var(--r)}
 h1{margin:10px 0 4px}.price{font-size:22px;color:var(--rose);margin:0 0 10px}s{color:var(--muted);font-size:16px}
 .add{width:100%;border:0;font:inherit;cursor:pointer}
 </style>
