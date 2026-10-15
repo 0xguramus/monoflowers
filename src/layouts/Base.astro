@@ -13,12 +13,20 @@ const { title, description = SITE.tagline } = Astro.props;
 <link rel="preload" href="/fonts/bpg-mrgvlovani-webfont.woff2" as="font" type="font/woff2" crossorigin />
 </head><body>
 <header class="top"><a href="/" class="logo" aria-label="monoflowers"><span class="lg"><img class="ld" src="/logo.png" alt="monoflowers" /><img class="ll" src="/logo-light.png" alt="" aria-hidden="true" /></span></a>
-<nav><a href="/catalog/">კატალოგი</a><a href="/about/"><span class="hm">ჩვენ </span>შესახებ</a><button id="theme" class="tbtn" aria-label="მუქი/ღია რეჟიმი" title="მუქი/ღია რეჟიმი">◐</button></nav></header>
+<nav><a href="/catalog/">კატალოგი</a><a href="/about/"><span class="hm">ჩვენ </span>შესახებ</a><a href="/cart/" class="cartlink" aria-label="კალათა" title="კალათა"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h12l1 13H5L6 7z"/><path d="M9 10V6a3 3 0 0 1 6 0v4"/></svg><span id="cartn" hidden>0</span></a><button id="theme" class="tbtn" aria-label="მუქი/ღია რეჟიმი" title="მუქი/ღია რეჟიმი">◐</button></nav></header>
 <main><slot /></main>
 <footer><p class="logo"><span class="lg"><img class="ld" src="/logo.png" alt="monoflowers" /><img class="ll" src="/logo-light.png" alt="" aria-hidden="true" /></span></p><p>{SITE.address} · {SITE.hours}</p>
-<p><a href={`tel:${SITE.phone}`}>{SITE.phone}</a> · <a href={`https://instagram.com/${SITE.instagram}`}>Instagram</a></p>
+<p><a href={`tel:${SITE.phone}`}>{SITE.phone}</a> · <a href={`https://instagram.com/${SITE.instagram}`}>Instagram</a> · <a href="/about/">ჩვენ შესახებ</a></p>
 <p class="muted">© {new Date().getFullYear()} {SITE.name}</p></footer>
 <script is:inline>document.getElementById("theme").onclick=function(){var d=document.documentElement,t=d.dataset.theme==="dark"?"light":"dark";d.dataset.theme=t;localStorage.setItem("theme",t);document.querySelector('meta[name=theme-color]').content=t==="dark"?"#2a0a0c":"#f6ecd6"}</script>
+<div id="toast" role="status" aria-live="polite"></div>
+<script is:inline>(function(){var K="mfcart";function g(){try{return JSON.parse(localStorage.getItem(K))||[]}catch(e){return[]}}
+function s(c){localStorage.setItem(K,JSON.stringify(c));b()}
+function b(){var n=g().reduce(function(a,i){return a+i.q},0),e=document.getElementById("cartn");e.textContent=n;e.hidden=!n}
+var tt;function toast(m){var t=document.getElementById("toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(function(){t.classList.remove("on")},1800)}
+window.mfCart={get:g,set:s,toast:toast,add:function(it){var c=g(),f=c.find(function(i){return i.id===it.id});if(f)f.q++;else{it.q=1;c.push(it)}s(c);toast("დაემატა კალათაში")}};
+document.addEventListener("click",function(e){var a=e.target.closest("[data-add]");if(!a)return;e.preventDefault();if(a.disabled)return;mfCart.add({id:a.dataset.add,name:a.dataset.name,price:+a.dataset.price,img:a.dataset.img})});
+b();addEventListener("storage",b);addEventListener("pageshow",b)})()</script>
 </body></html>
 <style is:global>
 @font-face{font-family:"BPG Mrgvlovani";src:url(/fonts/bpg-mrgvlovani-webfont.woff2) format("woff2"),url(/fonts/bpg-mrgvlovani-webfont.woff) format("woff");font-display:swap}
@@ -38,4 +46,9 @@ footer{text-align:center;padding:32px 18px calc(32px + env(safe-area-inset-botto
 .btn.wa{background:#25d366;color:#fff}.btn.ph{background:var(--rose);color:#fff}.btn.ig{border:1.5px solid var(--ink)}
 .chips{display:flex;gap:8px;overflow-x:auto;padding:4px 0 16px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}.chips a{white-space:nowrap;padding:8px 16px;border-radius:999px;background:var(--chip);text-decoration:none;font-size:14px;border:1px solid var(--line)}.chips a.on{background:var(--chip-on);border-color:var(--chip-on);color:var(--chip-on-ink)}
 .badge{display:inline-block;font-size:12px;padding:2px 10px;border-radius:999px;background:var(--badge);color:var(--rose)}
+.cartlink{position:relative;margin-left:14px;display:inline-grid;place-items:center;width:34px;height:34px;text-decoration:none}
+#cartn{position:absolute;top:-3px;right:-5px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:#760000;color:#f6ecd6;font-size:10.5px;line-height:17px;text-align:center;border:1px solid #f6ecd6}
+@media(max-width:480px){.top nav .cartlink{margin-left:8px;width:30px;height:30px}}
+#toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));transform:translate(-50%,20px);opacity:0;pointer-events:none;background:var(--btn);color:var(--btn-ink);padding:10px 18px;border-radius:999px;font-size:14px;transition:.25s;z-index:20;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.35)}#toast.on{opacity:1;transform:translate(-50%,0)}
+@media(max-width:400px){.top .lg img{height:13px}.top nav a{margin-left:7px;font-size:12.5px}.top nav .cartlink{margin-left:6px}.tbtn{margin-left:6px!important;width:28px!important;height:28px!important;font-size:15px}}
 </style>

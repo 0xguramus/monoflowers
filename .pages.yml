@@ -46,3 +46,11 @@ content:
       - { name: hours, label: სამუშაო საათები, type: string }
       - { name: email, label: ელფოსტა, type: string }
       - { name: about, label: „ჩვენ შესახებ“ ტექსტი, type: text }
+      - { name: delivery_note, label: "მიტანის შენიშვნა (ჩანს თარიღის ქვეშ; ცარიელი = დამალულია)", type: string }
+      - name: extras
+        label: დამატებითი საჩუქრები (შეკვეთის გვერდზე)
+        type: object
+        list: true
+        fields:
+          - { name: name, label: დასახელება, type: string, required: true }
+          - { name: price, label: ფასი (₾), type: number, required: true }

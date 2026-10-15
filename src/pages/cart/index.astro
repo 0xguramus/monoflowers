@@ -1,0 +1,95 @@
+---
+import Base from '../../layouts/Base.astro';
+import { SITE } from '../../lib/site';
+const extras = (SITE as any).extras ?? [];
+const note = (SITE as any).delivery_note ?? '';
+const slots = ['12:00–14:00','14:00–16:00','16:00–18:00','18:00–20:00','20:00–22:00','22:00–23:00'];
+---
+<Base title="კალათა და შეკვეთა">
+<a class="back" href="/catalog/">‹ ყიდვების გაგრძელება</a>
+<h1>შეკვეთის გაფორმება</h1>
+<div id="empty" hidden><p class="muted">კალათა ცარიელია.</p><a class="btn ph" href="/catalog/">კატალოგის ნახვა</a></div>
+<div id="full" hidden>
+<ul id="items"></ul>
+<form id="f" novalidate>
+<label>შენი სახელი<input name="name" autocomplete="name" /></label>
+<label>ტელეფონის ნომერი *<input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="5XX XX XX XX" /><span class="err" data-for="phone"></span></label>
+<fieldset><legend>მიტანა თუ გატანა</legend><div class="seg">
+<label><input type="radio" name="mode" value="delivery" checked /><span>მიტანა</span></label>
+<label><input type="radio" name="mode" value="pickup" /><span>მაღაზიიდან გატანა</span></label></div></fieldset>
+<label id="addrw">მიტანის მისამართი *<textarea name="address" rows="3" autocomplete="street-address"></textarea><span class="err" data-for="address"></span></label>
+<p id="shop" class="muted" hidden>გასატანი მისამართი: {SITE.address} ({SITE.hours})</p>
+<label>სასურველი თარიღი<input name="date" type="date" /><span class="err" data-for="date"></span></label>
+{note && <p class="hint muted">{note}</p>}
+<label>სასურველი დრო<select name="time"><option>ნებისმიერი დრო</option>{slots.map(s => <option>{s}</option>)}</select></label>
+{extras.length > 0 && <fieldset><legend>დაამატე საჩუქარი</legend>
+{extras.map((x: any, i: number) => <label class="chk"><input type="checkbox" name="extra" value={i} data-name={x.name} data-price={x.price} /><span>{x.name} — {x.price} ₾</span></label>)}</fieldset>}
+<label>ბარათის ტექსტი (არასავალდებულო)<textarea name="card" rows="3"></textarea></label>
+<label>შენიშვნა (არასავალდებულო)<textarea name="notes" rows="3"></textarea></label>
+<div class="sum"><h2>შენი შეკვეთა</h2><div id="lines"></div>
+<p class="total"><span>სულ</span><b id="total"></b></p>
+<button class="go" type="submit">შეკვეთა WhatsApp-ით</button>
+<p class="muted small">შეკვეთა WhatsApp-ში მზა შეტყობინების სახით გაიხსნება. მარაგსა და გადახდას იქ დაგიდასტურებთ.</p>
+<button type="button" id="clear" class="link">კალათის გასუფთავება</button></div>
+</form></div>
+<script is:inline define:vars={{ wa: SITE.whatsapp, shopAddr: SITE.address }}>
+addEventListener("DOMContentLoaded",function(){
+var C=window.mfCart,f=document.getElementById("f");
+var fmt=function(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,"\u2009")+" ₾"};
+var esc=function(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML};
+var d=new Date();f.date.value=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");f.date.min=f.date.value;
+function extras(){return [].slice.call(f.querySelectorAll("[name=extra]:checked")).map(function(e){return{name:e.dataset.name,price:+e.dataset.price}})}
+function render(){var c=C.get();document.getElementById("empty").hidden=!!c.length;document.getElementById("full").hidden=!c.length;
+document.getElementById("items").innerHTML=c.map(function(i,k){return '<li><img src="'+esc(i.img||"/images/placeholder.svg")+'" alt=""><div class="in"><b>'+esc(i.name)+'</b><span class="muted">'+fmt(i.price)+'</span><div class="qty"><button type="button" data-q="-1" data-k="'+k+'" aria-label="შემცირება">−</button><span>'+i.q+'</span><button type="button" data-q="1" data-k="'+k+'" aria-label="გაზრდა">+</button><button type="button" class="rm" data-rm="'+k+'">წაშლა</button></div></div><b class="lt">'+fmt(i.price*i.q)+'</b></li>'}).join("");
+var ex=extras(),t=0,h="";c.forEach(function(i){t+=i.price*i.q;h+='<p class="ln"><span>'+esc(i.name)+'<small>'+i.q+' × '+fmt(i.price)+'</small></span><span>'+fmt(i.price*i.q)+'</span></p>'});
+ex.forEach(function(x){t+=x.price;h+='<p class="ln"><span>'+esc(x.name)+'</span><span>'+fmt(x.price)+'</span></p>'});
+document.getElementById("lines").innerHTML=h;document.getElementById("total").textContent=fmt(t);return t}
+document.getElementById("items").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;var c=C.get();
+if(b.dataset.rm!=null)c.splice(+b.dataset.rm,1);else{var i=c[+b.dataset.k];i.q+=+b.dataset.q;if(i.q<1)c.splice(+b.dataset.k,1)}C.set(c);render()});
+f.addEventListener("change",function(){var p=f.mode.value==="pickup";document.getElementById("addrw").hidden=p;document.getElementById("shop").hidden=!p;render()});
+document.getElementById("clear").onclick=function(){if(confirm("გავასუფთაოთ კალათა?")){C.set([]);render()}};
+f.addEventListener("input",function(e){var n=e.target.name;if(n==="phone"||n==="address")err(n)});
+function err(n,m){var e=f.querySelector('[data-for='+n+']');e.textContent=m||"";f[n].classList.toggle("bad",!!m)}
+f.addEventListener("submit",function(e){e.preventDefault();var ok=true,ph=f.phone.value.replace(/[^\d+]/g,""),pk=f.mode.value==="pickup";
+err("phone");err("address");err("date");
+if(ph.replace(/\D/g,"").length<9){err("phone",ph?"ტელეფონის ნომერი არასწორია. შეამოწმე, გთხოვ.":"გთხოვ, მიუთითე ტელეფონის ნომერი.");ok=false}
+if(!pk&&!f.address.value.trim()){err("address","გთხოვ, მიუთითე მიტანის მისამართი.");ok=false}
+if(!f.date.value){err("date","გთხოვ, აირჩიე თარიღი.");ok=false}
+if(!ok){var b=f.querySelector(".bad");b&&b.focus();return}
+var c=C.get(),t=render(),L=["გამარჯობა! მსურს შეკვეთის გაფორმება:",""];
+c.forEach(function(i){L.push("• "+i.name+" — "+i.q+" × "+fmt(i.price)+" = "+fmt(i.price*i.q))});
+var ex=extras();if(ex.length){L.push("","დამატებით:");ex.forEach(function(x){L.push("• "+x.name+" — "+fmt(x.price))})}
+L.push("","სულ: "+fmt(t),"");
+if(f.name.value.trim())L.push("სახელი: "+f.name.value.trim());
+L.push("ტელეფონი: "+f.phone.value.trim());
+L.push(pk?"მიღება: მაღაზიიდან გატანა ("+shopAddr+")":"მიღება: მიტანა","");
+if(!pk)L.splice(L.length-1,0,"მისამართი: "+f.address.value.trim());
+var dd=f.date.value.split("-");L.push("თარიღი: "+dd[2]+"."+dd[1]+"."+dd[0]);L.push("დრო: "+f.time.value);
+if(f.card.value.trim())L.push("ბარათის ტექსტი: "+f.card.value.trim());
+if(f.notes.value.trim())L.push("შენიშვნა: "+f.notes.value.trim());
+var u="https://wa.me/"+wa+"?text="+encodeURIComponent(L.join("\n").replace(/\n\n$/,"\n"));window.__lastWa=u;window.open(u,"_blank")||(location.href=u)});
+render()});
+</script>
+</Base>
+<style>
+.back{display:inline-block;margin-top:16px;text-decoration:none;font-weight:700}h1{margin:8px 0 16px;font-size:26px}
+#items{grid-template-columns:minmax(0,1fr);list-style:none;padding:0;margin:0 0 22px;display:grid;gap:10px}
+:global(#items li){display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px}
+:global(#items img){width:60px;height:76px;object-fit:cover;border-radius:8px;background:var(--photo);flex:none}
+:global(#items .in){flex:1;min-width:0;display:flex;flex-direction:column;font-size:14px}:global(#items .in b){white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+:global(#items .lt){font-size:14px;white-space:nowrap}
+:global(.qty){display:flex;align-items:center;gap:8px;margin-top:4px}:global(.qty button){width:28px;height:28px;border-radius:50%;border:1px solid var(--line);background:none;color:var(--ink);font:inherit;cursor:pointer}
+:global(.qty .rm){width:auto;border:0;color:var(--muted);text-decoration:underline;font-size:12px;margin-left:4px}
+form{display:grid;gap:16px}label{display:grid;gap:6px;font-size:14px;font-weight:700}fieldset{border:0;padding:0;margin:0;display:grid;gap:8px}legend{font-size:14px;font-weight:700;margin-bottom:8px}
+input,textarea,select{width:100%;min-width:0;font:inherit;font-size:16px;font-weight:400;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:11px 12px;-webkit-appearance:none;appearance:none}
+input[type=date]{min-height:46px}select{background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px;background-repeat:no-repeat}
+:global(.bad){border-color:#e05a5a!important}.err{color:#ff8a80;font-weight:400;font-size:13px}.err:empty{display:none}[data-theme=light] .err{color:#b00020}
+.seg{display:flex;gap:8px;flex-wrap:wrap}.seg label{display:block}.seg input{position:absolute;opacity:0;width:1px;pointer-events:none}.seg span{display:block;padding:9px 16px;border:1px solid var(--line);border-radius:10px;background:var(--card);font-weight:400;cursor:pointer}.seg input:checked+span{border:2px solid var(--ink);padding:8px 15px}
+.chk{display:flex;align-items:center;gap:12px;font-weight:400}.chk input{width:24px;height:24px;flex:none;padding:0;border-radius:6px;-webkit-appearance:auto;appearance:auto;accent-color:#760000}
+.hint{margin:-8px 0 0;font-size:13px}#shop{margin:0;font-size:14px}
+.sum{border:1px solid var(--line);background:var(--card);border-radius:14px;padding:16px 18px}.sum h2{margin:0 0 10px;font-size:20px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+:global(.ln){display:flex;justify-content:space-between;gap:10px;margin:0 0 8px;font-size:14px}:global(.ln small){display:block;color:var(--muted);font-size:12px}
+.total{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:12px;margin:12px 0 16px;font-weight:700;font-size:17px}
+.go{width:100%;background:#1a9a4a;color:#fff;border:0;border-radius:10px;padding:15px;font:inherit;font-weight:700;cursor:pointer}.small{font-size:13px;margin:12px 0 4px}
+.link{background:none;border:0;color:var(--muted);text-decoration:underline;font:inherit;font-size:13px;padding:0;cursor:pointer}
+</style>

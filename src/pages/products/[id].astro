@@ -18,7 +18,8 @@ const url = new URL(`/products/${p.id}/`, Astro.site).href;
 <p class="price">{gel(d.price)} {d.old_price && <s>{gel(d.old_price)}</s>}</p>
 <p>{d.description}</p>
 {d.available ? <>
-<a class="btn wa" href={waHref(`გამარჯობა! მინდა შევუკვეთო „${d.name}“ (${gel(d.price)}). ${url}`)}>შეკვეთა WhatsApp-ით</a>
+<button type="button" class="btn ph add" data-add={p.id} data-name={d.name} data-price={d.price} data-img={d.images[0] ?? ''}>კალათაში დამატება</button>
+<a class="btn wa" href={waHref(`გამარჯობა! მინდა შევუკვეთო „${d.name}“ (${gel(d.price)}). ${url}`)}>კითხვა WhatsApp-ით</a>
 <a class="btn ph" href={phoneHref()}>შეკვეთა ტელეფონით</a>
 <a class="btn ig" href={igHref()}>მოგვწერე Instagram-ზე</a></> : <p class="muted">ეს პროდუქტი ამჟამად მიუწვდომელია. მსგავსი ვარიანტისთვის დაგვიკავშირდი.</p>}
 <div class="body"><Content /></div>
@@ -29,4 +30,5 @@ const url = new URL(`/products/${p.id}/`, Astro.site).href;
 .gallery{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;border-radius:var(--r)}
 .gallery img{flex:0 0 100%;width:100%;aspect-ratio:4/5;object-fit:cover;scroll-snap-align:start;border-radius:var(--r)}
 h1{margin:10px 0 4px}.price{font-size:22px;color:var(--rose);margin:0 0 10px}s{color:var(--muted);font-size:16px}
+.add{width:100%;border:0;font:inherit;cursor:pointer}
 </style>
