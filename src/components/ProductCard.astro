@@ -1,0 +1,16 @@
+---
+import { gel } from '../lib/site';
+const { p } = Astro.props; const d = p.data;
+---
+<a class="card" href={`/products/${p.id}/`}>
+  <div class="img"><img src={d.images[0] ?? '/images/placeholder.svg'} alt={d.name} loading="lazy" />
+  {!d.available && <span class="out">ამჟამად არ არის</span>}{d.example && <span class="ex">ნიმუში</span>}</div>
+  <h3>{d.name}</h3>
+  <p class="price">{gel(d.price)} {d.old_price && <s>{gel(d.old_price)}</s>}</p>
+</a>
+<style>
+.card{display:block;background:var(--card);border-radius:var(--r);overflow:hidden;text-decoration:none;box-shadow:0 2px 14px rgba(80,50,40,.06)}
+.img{position:relative;aspect-ratio:4/5}.img img{width:100%;height:100%;object-fit:cover;display:block}
+.out,.ex{position:absolute;left:8px;top:8px;font-size:11px;background:rgba(255,255,255,.9);padding:2px 8px;border-radius:999px}.ex{left:auto;right:8px;color:var(--rose)}
+h3{font-size:15px;margin:10px 12px 2px}.price{margin:0 12px 12px;color:var(--rose);font-weight:500}s{color:var(--muted);font-weight:400;font-size:13px}
+</style>

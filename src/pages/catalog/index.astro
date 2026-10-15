@@ -1,0 +1,7 @@
+---
+import Base from '../../layouts/Base.astro';
+import Catalog from '../../components/Catalog.astro';
+import { getCollection } from 'astro:content';
+const items = (await getCollection('products')).sort((a, b) => Number(b.data.available) - Number(a.data.available));
+---
+<Base title="კატალოგი"><Catalog items={items} /></Base>

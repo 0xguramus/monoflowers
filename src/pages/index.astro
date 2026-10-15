@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+import ProductCard from '../components/ProductCard.astro';
+import { getCollection } from 'astro:content';
+import { SITE, CATEGORIES, waHref } from '../lib/site';
+const all = await getCollection('products');
+const featured = all.filter(p => p.data.featured);
+---
+<Base>
+<section class="hero"><img src="/images/hero.svg" alt="" />
+<div><h1>{SITE.tagline}</h1><p>თაიგულები, კომპოზიციები და საჩუქრები ყოველი განსაკუთრებული დღისთვის.</p>
+<a class="btn ph" href="/catalog/">კატალოგის ნახვა</a><a class="btn wa" href={waHref('გამარჯობა! მინდა შეკვეთა.')}>მოგვწერე WhatsApp-ზე</a></div></section>
+<h2>რჩეული</h2><div class="grid">{featured.map(p => <ProductCard p={p} />)}</div>
+<h2>კატეგორიები</h2>
+<div class="cats">{Object.entries(CATEGORIES).map(([k, v]) => <a href={`/catalog/${k}/`}>{v}</a>)}</div>
+</Base>
+<style>
+.hero{display:grid;gap:18px;margin:18px 0 10px}.hero img{width:100%;border-radius:var(--r);aspect-ratio:16/10;object-fit:cover}
+.hero h1{font-size:28px;margin:0 0 8px}@media(min-width:760px){.hero{grid-template-columns:1.2fr 1fr;align-items:center}.hero h1{font-size:38px}}
+h2{margin:34px 0 14px;font-size:22px}
+.cats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.cats a{background:var(--card);padding:22px 14px;border-radius:var(--r);text-align:center;text-decoration:none;font-family:'Noto Serif Georgian',serif;border:1px solid #eadfd7}
+</style>

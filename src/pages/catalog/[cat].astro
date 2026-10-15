@@ -1,0 +1,10 @@
+---
+import Base from '../../layouts/Base.astro';
+import Catalog from '../../components/Catalog.astro';
+import { getCollection } from 'astro:content';
+import { CATEGORIES } from '../../lib/site';
+export function getStaticPaths() { return Object.keys(CATEGORIES).map(cat => ({ params: { cat } })); }
+const { cat } = Astro.params;
+const items = await getCollection('products', p => p.data.category === cat);
+---
+<Base title={CATEGORIES[cat]}><Catalog items={items} current={cat} /></Base>

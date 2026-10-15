@@ -1,0 +1,9 @@
+---
+import ProductCard from './ProductCard.astro';
+import { CATEGORIES } from '../lib/site';
+const { items, current } = Astro.props;
+---
+<h1>{current ? CATEGORIES[current] : 'კატალოგი'}</h1>
+<div class="chips"><a href="/catalog/" class={!current ? 'on' : ''}>ყველა</a>
+{Object.entries(CATEGORIES).map(([k, v]) => <a href={`/catalog/${k}/`} class={current === k ? 'on' : ''}>{v}</a>)}</div>
+{items.length ? <div class="grid">{items.map(p => <ProductCard p={p} />)}</div> : <p class="muted">ამ კატეგორიაში პროდუქცია ჯერ არ არის.</p>}

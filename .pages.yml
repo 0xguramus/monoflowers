@@ -1,0 +1,48 @@
+media:
+  input: public/images
+  output: /images
+content:
+  - name: products
+    label: პროდუქცია
+    type: collection
+    path: src/content/products
+    filename: "{primary}.md"
+    view:
+      fields: [name, price, category, available, featured]
+      primary: name
+    fields:
+      - { name: name, label: დასახელება, type: string, required: true }
+      - { name: price, label: ფასი (₾), type: number, required: true }
+      - { name: old_price, label: ძველი ფასი (₾, ფასდაკლებისთვის), type: number, required: false }
+      - name: category
+        label: კატეგორია
+        type: select
+        required: true
+        options:
+          values:
+            - { value: bouquets, label: თაიგულები }
+            - { value: boxes, label: ყუთები }
+            - { value: single, label: ცალი ყვავილები }
+            - { value: compositions, label: კომპოზიციები }
+            - { value: gifts, label: საჩუქრები }
+      - { name: images, label: ფოტოები, type: image, list: true }
+      - { name: available, label: მარაგშია, type: boolean, default: true }
+      - { name: featured, label: მთავარ გვერდზე გამოჩნდეს, type: boolean, default: false }
+      - { name: description, label: მოკლე აღწერა, type: text, required: true }
+      - { name: example, label: ნიმუშია (ტესტური), type: boolean, default: false }
+      - { name: body, label: დეტალური აღწერა, type: rich-text }
+  - name: settings
+    label: საიტის პარამეტრები
+    type: file
+    path: src/lib/settings.json
+    format: json
+    fields:
+      - { name: name, label: მაღაზიის სახელი, type: string }
+      - { name: tagline, label: სლოგანი, type: string }
+      - { name: phone, label: ტელეფონი, type: string }
+      - { name: whatsapp, label: "WhatsApp ნომერი (მხოლოდ ციფრები, მაგ. 995555123456)", type: string }
+      - { name: instagram, label: Instagram-ის სახელი, type: string }
+      - { name: address, label: მისამართი, type: string }
+      - { name: hours, label: სამუშაო საათები, type: string }
+      - { name: email, label: ელფოსტა, type: string }
+      - { name: about, label: „ჩვენ შესახებ“ ტექსტი, type: text }

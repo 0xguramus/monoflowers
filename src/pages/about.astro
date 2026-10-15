@@ -1,0 +1,11 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE, waHref, phoneHref, igHref } from '../lib/site';
+---
+<Base title="ჩვენ შესახებ">
+<h1>ჩვენ შესახებ</h1><p>{SITE.about}</p>
+<h2>კონტაქტი</h2>
+<ul><li>მისამართი: {SITE.address}</li><li>სამუშაო საათები: {SITE.hours}</li>
+<li>ტელეფონი: <a href={phoneHref()}>{SITE.phone}</a></li><li>ელფოსტა: <a href={`mailto:${SITE.email}`}>{SITE.email}</a></li></ul>
+<a class="btn wa" href={waHref()}>მოგვწერე WhatsApp-ზე</a><a class="btn ph" href={phoneHref()}>დაგვირეკე</a><a class="btn ig" href={igHref()}>Instagram</a>
+</Base>
