@@ -7,23 +7,25 @@ const { title, description = SITE.tagline } = Astro.props;
 <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>{title ? `${title} — ${SITE.name}` : SITE.name}</title>
 <meta name="description" content={description} />
-<meta name="theme-color" content="#f7f1ec" />
+<meta name="theme-color" content="#fbf5ea" />
 <script is:inline>(function(){var t=localStorage.getItem("theme");if(!t)t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})()</script>
-<link rel="icon" href="/favicon.svg" />
+<link rel="icon" href="/logo-square.jpg" /><link rel="apple-touch-icon" href="/logo-square.jpg" /><meta property="og:image" content="/logo-square.jpg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Georgian:wght@400;600&family=Noto+Sans+Georgian:wght@400;500&display=swap" rel="stylesheet" />
 </head><body>
-<header class="top"><a href="/" class="logo">Mono<span>Flowers</span></a>
-<nav><a href="/catalog/">კატალოგი</a><a href="/about/">ჩვენ შესახებ</a><button id="theme" class="tbtn" aria-label="მუქი/ღია რეჟიმი" title="მუქი/ღია რეჟიმი">◐</button></nav></header>
+<header class="top"><a href="/" class="logo" aria-label="monoflowers"><span class="lg"><img class="ld" src="/logo.png" alt="monoflowers" /><img class="ll" src="/logo-light.png" alt="" aria-hidden="true" /></span></a>
+<nav><a href="/catalog/">კატალოგი</a><a href="/about/"><span class="hm">ჩვენ </span>შესახებ</a><button id="theme" class="tbtn" aria-label="მუქი/ღია რეჟიმი" title="მუქი/ღია რეჟიმი">◐</button></nav></header>
 <main><slot /></main>
-<footer><p class="logo">Mono<span>Flowers</span></p><p>{SITE.address} · {SITE.hours}</p>
+<footer><p class="logo"><span class="lg"><img class="ld" src="/logo.png" alt="monoflowers" /><img class="ll" src="/logo-light.png" alt="" aria-hidden="true" /></span></p><p>{SITE.address} · {SITE.hours}</p>
 <p><a href={`tel:${SITE.phone}`}>{SITE.phone}</a> · <a href={`https://instagram.com/${SITE.instagram}`}>Instagram</a></p>
 <p class="muted">© {new Date().getFullYear()} {SITE.name}</p></footer>
-<script is:inline>document.getElementById("theme").onclick=function(){var d=document.documentElement,t=d.dataset.theme==="dark"?"light":"dark";d.dataset.theme=t;localStorage.setItem("theme",t);document.querySelector('meta[name=theme-color]').content=t==="dark"?"#1c1817":"#f7f1ec"}</script>
+<script is:inline>document.getElementById("theme").onclick=function(){var d=document.documentElement,t=d.dataset.theme==="dark"?"light":"dark";d.dataset.theme=t;localStorage.setItem("theme",t);document.querySelector('meta[name=theme-color]').content=t==="dark"?"#1e0707":"#fbf5ea"}</script>
 </body></html>
 <style is:global>
-:root{--bg:#f7f1ec;--card:#fff;--ink:#2f2a28;--muted:#8a7f79;--rose:#b5566b;--sage:#7c8f74;--r:18px;--line:#eadfd7;--glass:rgba(247,241,236,.92);--chip-on-ink:#fff;--badge:#f3e3e6;--shadow:rgba(80,50,40,.06);--pill:rgba(255,255,255,.9)}
-[data-theme=dark]{--bg:#1c1817;--card:#28221f;--ink:#f1e8e3;--muted:#a89c95;--rose:#e08a9c;--sage:#9fb396;--line:#3a322e;--glass:rgba(28,24,23,.92);--chip-on-ink:#1c1817;--badge:#3d2a2f;--shadow:rgba(0,0,0,.35);--pill:rgba(40,34,31,.9);color-scheme:dark}
+:root{--bg:#fbf5ea;--card:#fff;--ink:#3b1212;--muted:#8c6f66;--rose:#760000;--sage:#a8846b;--r:18px;--line:#ecdcc8;--glass:rgba(251,245,234,.92);--chip-on-ink:#f6ecd6;--badge:#f3dcd2;--shadow:rgba(118,0,0,.07);--pill:rgba(255,255,255,.92)}
+[data-theme=dark]{--bg:#1e0707;--card:#2c0f0f;--ink:#f6ecd6;--muted:#c2a99c;--rose:#f0c8b4;--sage:#c9a98e;--line:#4a1d1d;--glass:rgba(30,7,7,.92);--chip-on-ink:#2c0f0f;--badge:#4a1717;--shadow:rgba(0,0,0,.4);--pill:rgba(44,15,15,.92);color-scheme:dark}
+.lg img{height:22px;width:auto;display:block}.top nav{display:flex;align-items:center;white-space:nowrap}@media(max-width:480px){.top .lg img{height:15px}.hm{display:none}.top{padding-left:12px!important;padding-right:12px!important}.top nav a{margin-left:9px;font-size:13px}.tbtn{margin-left:10px!important;width:30px!important;height:30px!important}}.lg .ll{display:none}[data-theme=dark] .lg .ld{display:none}[data-theme=dark] .lg .ll{display:block}footer .lg{display:inline-block}footer .lg img{height:18px}
+.btn.ph{background:var(--rose)!important;color:var(--bg)!important}
 .tbtn{margin-left:14px;background:none;border:1px solid var(--line);color:var(--ink);border-radius:999px;width:34px;height:34px;font-size:17px;cursor:pointer;vertical-align:middle}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 'Noto Sans Georgian',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
 h1,h2,h3,.logo{font-family:'Noto Serif Georgian',serif;font-weight:600;line-height:1.25}
