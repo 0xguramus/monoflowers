@@ -1,16 +1,28 @@
 ---
-import { gel } from '../lib/site';
+import { gel, waHref } from '../lib/site';
 const { p } = Astro.props; const d = p.data;
+const short = d.description.replace(/\s*\(ნიმუში[^)]*\)\s*/g, ' ').trim();
 ---
-<a class="card" href={`/products/${p.id}/`}>
-  <div class="img"><img src={d.images[0] ?? '/images/placeholder.svg'} alt={d.name} loading="lazy" />
-  {!d.available && <span class="out">ამჟამად არ არის</span>}{d.example && <span class="ex">ნიმუში</span>}</div>
-  <h3>{d.name}</h3>
-  <p class="price">{gel(d.price)} {d.old_price && <s>{gel(d.old_price)}</s>}</p>
-</a>
+<article class="card">
+  <a class="img" href={`/products/${p.id}/`}><img src={d.images[0] ?? '/images/placeholder.svg'} alt={d.name} loading="lazy" />
+  {!d.available && <span class="out">ამჟამად არ არის</span>}{d.example && <span class="ex">ნიმუში</span>}</a>
+  <div class="body">
+    <h3><a href={`/products/${p.id}/`}>{d.name}</a></h3>
+    <p class="desc">{short}</p>
+    <div class="row">
+      <p class="price">{d.old_price && <s>{gel(d.old_price)}</s>} <b>{gel(d.price)}</b></p>
+      <a class="order" href={waHref(`გამარჯობა! მსურს შევუკვეთო: ${d.name} (${gel(d.price)})`)} target="_blank" rel="noopener">შეკვეთა</a>
+    </div>
+  </div>
+</article>
 <style>
-.card{display:block;background:var(--card);border-radius:var(--r);overflow:hidden;text-decoration:none;box-shadow:0 2px 14px var(--shadow)}
-.img{position:relative;aspect-ratio:4/5}.img img{width:100%;height:100%;object-fit:cover;display:block}
-.out,.ex{position:absolute;left:8px;top:8px;font-size:11px;background:var(--pill);padding:2px 8px;border-radius:999px}.ex{left:auto;right:8px;color:var(--rose)}
-h3{font-size:15px;margin:10px 12px 2px}.price{margin:0 12px 12px;color:var(--rose);font-weight:500}s{color:var(--muted);font-weight:400;font-size:13px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:0 2px 14px var(--shadow);display:flex;flex-direction:column}
+.img{position:relative;display:block;aspect-ratio:1/1;background:var(--photo)}.img img{width:100%;height:100%;object-fit:cover;display:block}
+.out,.ex{position:absolute;left:10px;top:10px;font-size:11px;background:var(--pill);color:var(--ink);padding:2px 10px;border-radius:999px}.ex{left:auto;right:10px}
+.body{padding:14px 16px 16px;display:flex;flex-direction:column;flex:1}
+h3{font-size:20px;margin:0 0 6px}h3 a{text-decoration:none}
+.desc{margin:0 0 14px;color:var(--muted);font-size:14px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.row{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.price{margin:0;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}s{color:var(--muted);font-size:15px}b{font-size:20px;font-weight:700}
+.order{flex:none;background:var(--btn);color:var(--btn-ink);text-decoration:none;padding:8px 18px;border-radius:12px;font-size:14px;font-weight:700}
 </style>
