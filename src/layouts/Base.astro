@@ -22,7 +22,7 @@ const { title, description = SITE.tagline } = Astro.props;
 <script is:inline>document.getElementById("theme").onclick=function(){var d=document.documentElement,t=d.dataset.theme==="dark"?"light":"dark";d.dataset.theme=t;localStorage.setItem("theme",t);document.querySelector('meta[name=theme-color]').content=t==="dark"?"#1c1817":"#f7f1ec"}</script>
 </body></html>
 <style is:global>
-:root{--bg:#f7f1ec;--card:#fff;--ink:#2f2a28;--muted:#8a7f79;--rose:#b5566b;--sage:#7c8f74;--r:18px;--line:var(--line);--glass:var(--glass);--chip-on-ink:#fff;--badge:#f3e3e6;--shadow:rgba(80,50,40,.06);--pill:rgba(255,255,255,.9)}
+:root{--bg:#f7f1ec;--card:#fff;--ink:#2f2a28;--muted:#8a7f79;--rose:#b5566b;--sage:#7c8f74;--r:18px;--line:#eadfd7;--glass:rgba(247,241,236,.92);--chip-on-ink:#fff;--badge:#f3e3e6;--shadow:rgba(80,50,40,.06);--pill:rgba(255,255,255,.9)}
 [data-theme=dark]{--bg:#1c1817;--card:#28221f;--ink:#f1e8e3;--muted:#a89c95;--rose:#e08a9c;--sage:#9fb396;--line:#3a322e;--glass:rgba(28,24,23,.92);--chip-on-ink:#1c1817;--badge:#3d2a2f;--shadow:rgba(0,0,0,.35);--pill:rgba(40,34,31,.9);color-scheme:dark}
 .tbtn{margin-left:14px;background:none;border:1px solid var(--line);color:var(--ink);border-radius:999px;width:34px;height:34px;font-size:17px;cursor:pointer;vertical-align:middle}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 'Noto Sans Georgian',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
