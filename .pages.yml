@@ -14,12 +14,14 @@ content:
       - { name: name, label: დასახელება, type: string, required: true }
       - { name: price, label: ფასი (₾), type: number, required: true }
       - { name: old_price, label: ძველი ფასი (₾, ფასდაკლებისთვის), type: number, required: false }
+      - { name: order, label: "რიგითობა (ნაკლები რიცხვი — უფრო წინ)", type: number, required: false }
       - name: category
         label: კატეგორია
         type: select
         required: true
         options:
           values:
+            - { value: red-roses, label: წითელი ვარდები }
             - { value: bouquets, label: თაიგულები }
             - { value: boxes, label: ყუთები }
             - { value: single, label: ცალი ყვავილები }

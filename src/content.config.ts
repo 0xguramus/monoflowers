@@ -5,8 +5,9 @@ const products = defineCollection({
   schema: z.object({
     name: z.string(),
     price: z.number(),
+    order: z.number().optional().nullable(),
     old_price: z.number().optional().nullable(),
-    category: z.enum(['bouquets', 'boxes', 'single', 'compositions', 'gifts']),
+    category: z.enum(['red-roses', 'bouquets', 'boxes', 'single', 'compositions', 'gifts']),
     images: z.array(z.string()).default([]),
     available: z.boolean().default(true),
     featured: z.boolean().default(false),
