@@ -2,27 +2,33 @@
 import { gel, waHref } from '../lib/site';
 const { p } = Astro.props; const d = p.data;
 const short = d.description.replace(/\s*\(ნიმუში[^)]*\)\s*/g, ' ').trim();
+const url = `/products/${p.id}/`;
 ---
-<article class="card">
-  <a class="img" href={`/products/${p.id}/`}><img src={d.images[0] ?? '/images/placeholder.svg'} alt={d.name} loading="lazy" />
-  {!d.available && <span class="out">ამჟამად არ არის</span>}{d.example && <span class="ex">ნიმუში</span>}</a>
+<article class="card" data-q={`${d.name} ${short}`.toLowerCase()}>
+  <div class="img">
+    <a href={url} tabindex="-1"><img src={d.images[0] ?? '/images/placeholder.svg'} alt={d.name} loading="lazy" /></a>
+    <div class="badges">{!d.available && <span class="bd out">ამოიწურა</span>}{d.old_price && <span class="bd">ფასდაკლება</span>}{d.featured && <span class="bd">ჰიტი</span>}</div>
+    {d.example && <span class="ex">ნიმუში</span>}
+    <a class="order" href={waHref(`გამარჯობა! მსურს შევუკვეთო: ${d.name} (${gel(d.price)})`)} target="_blank" rel="noopener" aria-label="შეკვეთა" title="შეკვეთა">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h12l1 13H5L6 7z"/><path d="M9 10V6a3 3 0 0 1 6 0v4"/></svg>
+    </a>
+  </div>
   <div class="body">
-    <h3><a href={`/products/${p.id}/`}>{d.name}</a></h3>
+    <h3><a href={url}>{d.name}</a></h3>
     <p class="desc">{short}</p>
-    <div class="row">
-      <p class="price">{d.old_price && <s>{gel(d.old_price)}</s>} <b>{gel(d.price)}</b></p>
-      <a class="order" href={waHref(`გამარჯობა! მსურს შევუკვეთო: ${d.name} (${gel(d.price)})`)} target="_blank" rel="noopener">შეკვეთა</a>
-    </div>
+    <p class="price">{d.old_price && <s>{gel(d.old_price)}</s>} <b>{gel(d.price)}</b></p>
   </div>
 </article>
 <style>
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:0 2px 14px var(--shadow);display:flex;flex-direction:column}
-.img{position:relative;display:block;aspect-ratio:1/1;background:var(--photo)}.img img{width:100%;height:100%;object-fit:cover;display:block}
-.out,.ex{position:absolute;left:10px;top:10px;font-size:11px;background:var(--pill);color:var(--ink);padding:2px 10px;border-radius:999px}.ex{left:auto;right:10px}
-.body{padding:14px 16px 16px;display:flex;flex-direction:column;flex:1}
-h3{font-size:20px;margin:0 0 6px}h3 a{text-decoration:none}
-.desc{margin:0 0 14px;color:var(--muted);font-size:14px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.row{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
-.price{margin:0;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}s{color:var(--muted);font-size:15px}b{font-size:20px;font-weight:700}
-.order{flex:none;background:var(--btn);color:var(--btn-ink);text-decoration:none;padding:8px 18px;border-radius:12px;font-size:14px;font-weight:700}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.img{position:relative;aspect-ratio:3/4;background:var(--photo)}.img a:first-child,.img img{display:block;width:100%;height:100%}.img img{object-fit:cover}
+.badges{position:absolute;left:8px;top:8px;display:flex;flex-direction:column;align-items:flex-start;gap:4px}
+.bd{background:#760000;color:#f6ecd6;font-size:11px;line-height:1;padding:6px 8px;border-radius:4px}.bd.out{background:#3a3030}
+.ex{position:absolute;right:8px;top:8px;font-size:10px;background:var(--pill);color:var(--ink);padding:2px 7px;border-radius:999px}
+.order{position:absolute;right:10px;bottom:10px;width:44px;height:44px;border-radius:50%;background:#760000;color:#f6ecd6;display:grid;place-items:center;box-shadow:0 3px 10px rgba(0,0,0,.3)}
+[data-theme=dark] .order{border:1px solid rgba(246,236,214,.35)}
+.body{padding:10px 12px 12px;display:flex;flex-direction:column;flex:1;min-width:0}
+h3{font-size:15px;font-weight:700;margin:0 0 4px;line-height:1.3;color:var(--rose);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}h3 a{text-decoration:none}
+.desc{margin:0 0 10px;color:var(--muted);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.price{margin:auto 0 0;display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}s{color:var(--muted);font-size:12px}b{font-size:15px;font-weight:700}
 </style>
