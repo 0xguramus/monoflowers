@@ -8,7 +8,6 @@ const featured = all.filter(p => p.data.featured);
 const slides = (SITE as any).slides ?? [];
 ---
 <Base>
-<nav class="chips top-cats" aria-label="კატეგორიები"><a href="/catalog/" class="on">ყველა</a>{Object.entries(CATEGORIES).map(([k, v]) => <a href={`/catalog/${k}/`}>{v}</a>)}</nav>
 <section class="hero" aria-label="მთავარი სლაიდები"><div class="tr" id="tr">{slides.map((s: any, i: number) => <div class="sd">
 <img src={s.image} alt="" loading={i ? 'lazy' : 'eager'} fetchpriority={i ? 'auto' : 'high'} />
 <div class="ov"><p class="t">{s.title}</p>{s.subtitle && <p class="st">{s.subtitle}</p>}{s.note && <p class="nt">{s.note}</p>}{s.button_text && <a class="cta" href={s.button_link || '/catalog/'}>{s.button_text}</a>}</div></div>)}</div>
@@ -17,10 +16,11 @@ const slides = (SITE as any).slides ?? [];
 t.addEventListener("scroll",function(){var i=Math.round(t.scrollLeft/t.clientWidth);if(i!==c){c=i;for(var k=0;k<n;k++)b[k].classList.toggle("on",k===i)}},{passive:true});
 d.addEventListener("click",function(e){var x=e.target.closest("button");if(x){go(+x.dataset.i);rs()}});
 function rs(){clearInterval(tm);tm=setInterval(function(){go((c+1)%n)},5000)}t.addEventListener("touchstart",function(){clearInterval(tm)},{passive:true});t.addEventListener("touchend",function(){setTimeout(rs,3000)},{passive:true});rs()})()</script>
+<nav class="chips top-cats" aria-label="კატეგორიები"><a href="/catalog/" class="on">ყველა</a>{Object.entries(CATEGORIES).map(([k, v]) => <a href={`/catalog/${k}/`}>{v}</a>)}</nav>
 <h2>რჩეული</h2><div class="grid">{featured.map(p => <ProductCard p={p} />)}</div>
 </Base>
 <style>
-.top-cats{margin-top:14px;padding-bottom:4px}.hero{position:relative;width:100vw;margin:6px 0 0 calc(50% - 50vw)}
+.top-cats{margin-top:16px;padding-bottom:4px}.hero{position:relative;width:100vw;margin:0 0 0 calc(50% - 50vw)}
 .tr{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}.tr::-webkit-scrollbar{display:none}
 .sd{flex:0 0 100%;position:relative;aspect-ratio:4/5;max-height:82vh;scroll-snap-align:start;scroll-snap-stop:always;background:#2a0a0c;overflow:hidden}@media(min-width:760px){.sd{aspect-ratio:16/7}}
 .sd img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
