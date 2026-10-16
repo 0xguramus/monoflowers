@@ -27,7 +27,11 @@ content:
             - { value: single, label: ცალი ყვავილები }
             - { value: compositions, label: კომპოზიციები }
             - { value: gifts, label: საჩუქრები }
-      - { name: images, label: ფოტოები, type: image, list: true }
+      - name: images
+        label: "ფოტოები (მაქს. 4, პირველი მთავარია)"
+        description: "ატვირთე 1–4 ფოტო. სასურველია ვერტიკალური (4:5) ფორმატი. პირველი ფოტო ჩანს ბარათზე და კალათაში."
+        type: image
+        list: { max: 4 }
       - { name: available, label: მარაგშია, type: boolean, default: true }
       - { name: featured, label: მთავარ გვერდზე გამოჩნდეს, type: boolean, default: false }
       - { name: description, label: მოკლე აღწერა, type: text, required: true }

@@ -8,7 +8,7 @@ const products = defineCollection({
     order: z.number().optional().nullable(),
     old_price: z.number().optional().nullable(),
     category: z.enum(['red-roses', 'bouquets', 'boxes', 'single', 'compositions', 'gifts']),
-    images: z.array(z.string()).default([]),
+    images: z.array(z.string()).max(4).default([]),
     available: z.boolean().default(true),
     featured: z.boolean().default(false),
     description: z.string(),
