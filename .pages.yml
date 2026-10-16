@@ -24,6 +24,7 @@ content:
             - { value: red-roses, label: წითელი ვარდები }
             - { value: spray-roses, label: სპრეი ვარდები }
             - { value: roses, label: ვარდები }
+            - { value: mixed-flowers, label: შერეული ყვავილები }
             - { value: bouquets, label: თაიგულები }
             - { value: boxes, label: ყუთები }
             - { value: single, label: ცალი ყვავილები }

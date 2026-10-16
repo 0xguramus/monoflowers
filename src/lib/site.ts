@@ -4,6 +4,7 @@ export const CATEGORIES = {
   'red-roses': 'წითელი ვარდები',
   'spray-roses': 'სპრეი ვარდები',
   roses: 'ვარდები',
+  'mixed-flowers': 'შერეული ყვავილები',
   bouquets: 'თაიგულები',
   boxes: 'ყუთები',
   single: 'ცალი ყვავილები',
