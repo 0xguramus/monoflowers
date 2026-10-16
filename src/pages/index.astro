@@ -2,9 +2,12 @@
 import Base from '../layouts/Base.astro';
 import ProductCard from '../components/ProductCard.astro';
 import { getCollection } from 'astro:content';
+import PostCard from '../components/PostCard.astro';
+import { getPosts } from '../lib/blog';
 import { SITE, CATEGORIES } from '../lib/site';
 const all = await getCollection('products');
 const featured = all.filter(p => p.data.featured);
+const posts = (await getPosts()).slice(0, 3);
 const slides = (SITE as any).slides ?? [];
 ---
 <Base>
@@ -18,6 +21,7 @@ d.addEventListener("click",function(e){var x=e.target.closest("button");if(x){go
 function rs(){clearInterval(tm);tm=setInterval(function(){go((c+1)%n)},5000)}t.addEventListener("touchstart",function(){clearInterval(tm)},{passive:true});t.addEventListener("touchend",function(){setTimeout(rs,3000)},{passive:true});rs()})()</script>
 <nav class="chips top-cats" aria-label="კატეგორიები"><a href="/catalog/" class="on">ყველა</a>{Object.entries(CATEGORIES).map(([k, v]) => <a href={`/catalog/${k}/`}>{v}</a>)}</nav>
 <h2>რჩეული</h2><div class="grid">{featured.map(p => <ProductCard p={p} />)}</div>
+{posts.length > 0 && <section class="blog"><div class="bh"><h2>ბლოგი</h2><a href="/blog/">ყველა სტატია ›</a></div><div class="pg">{posts.map(p => <PostCard p={p} />)}</div></section>}
 </Base>
 <style>
 .top-cats{margin-top:16px;padding-bottom:4px}.hero{position:relative;width:100vw;margin:0 0 0 calc(50% - 50vw)}
@@ -33,4 +37,6 @@ function rs(){clearInterval(tm);tm=setInterval(function(){go((c+1)%n)},5000)}t.a
 .dots button{width:8px;height:8px;border-radius:4px;border:0;padding:0;background:rgba(246,236,214,.5);cursor:pointer;transition:width .25s}.dots button.on{width:26px;background:#760000;box-shadow:0 0 0 1px rgba(246,236,214,.6)}
 h2{margin:34px 0 14px;font-size:22px}
 .cats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.cats a{background:var(--card);padding:22px 14px;border-radius:var(--r);text-align:center;text-decoration:none;font-family:"BPG Mrgvlovani",sans-serif;border:1px solid var(--line)}
+.bh{display:flex;justify-content:space-between;align-items:baseline;gap:10px}.bh a{color:var(--rose);font-size:14px;white-space:nowrap}
+.pg{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}@media(min-width:620px){.pg{grid-template-columns:repeat(3,minmax(0,1fr))}}
 </style>

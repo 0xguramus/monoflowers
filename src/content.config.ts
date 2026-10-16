@@ -15,4 +15,15 @@ const products = defineCollection({
     example: z.boolean().default(false),
   }),
 });
-export const collections = { products };
+const blog = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/blog' }),
+  schema: z.object({
+    title: z.string(),
+    date: z.coerce.date(),
+    cover: z.string().optional().nullable(),
+    excerpt: z.string(),
+    draft: z.boolean().default(false),
+    example: z.boolean().default(false),
+  }),
+});
+export const collections = { products, blog };

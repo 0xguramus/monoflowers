@@ -14,3 +14,4 @@ export const waHref = (text = '') => `https://wa.me/${SITE.whatsapp}` + (text ? 
 export const igHref = () => `https://instagram.com/${SITE.instagram}`;
 export const gel = (n: number) => `${String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '\u2009')} ₾`;
 export const sortProducts = <T extends { data: { available: boolean; order?: number | null } }>(a: T[]) => a.sort((x, y) => Number(y.data.available) - Number(x.data.available) || (x.data.order ?? 9999) - (y.data.order ?? 9999));
+export const fmtDate = (d: Date) => `${d.getUTCDate()} ${['იანვარი','თებერვალი','მარტი','აპრილი','მაისი','ივნისი','ივლისი','აგვისტო','სექტემბერი','ოქტომბერი','ნოემბერი','დეკემბერი'][d.getUTCMonth()]}, ${d.getUTCFullYear()}`;

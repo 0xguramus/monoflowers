@@ -1,0 +1,15 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getPosts } from '../../lib/blog';
+const posts = await getPosts();
+---
+<Base title="ბლოგი" description="რჩევები ყვავილების მოვლაზე, მათ მნიშვნელობასა და საჩუქრებზე.">
+<h1>ბლოგი</h1>
+<p class="muted lead">რჩევები ყვავილების მოვლაზე, მათ მნიშვნელობასა და საჩუქრებზე.</p>
+{posts.length ? <div class="pg">{posts.map(p => <PostCard p={p} />)}</div> : <p class="muted">სტატიები ჯერ არ არის.</p>}
+</Base>
+<style>
+h1{margin:20px 0 4px}.lead{margin:0 0 18px}
+.pg{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}@media(min-width:620px){.pg{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(min-width:960px){.pg{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>

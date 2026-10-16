@@ -37,6 +37,24 @@ content:
       - { name: description, label: მოკლე აღწერა, type: text, required: true }
       - { name: example, label: ნიმუშია (ტესტური), type: boolean, default: false }
       - { name: body, label: დეტალური აღწერა, type: rich-text }
+  - name: blog
+    label: ბლოგი
+    type: collection
+    path: src/content/blog
+    filename: "{year}-{month}-{day}-{primary}.md"
+    view:
+      fields: [title, date, draft]
+      primary: title
+      sort: [date]
+      default: { sort: date, order: desc }
+    fields:
+      - { name: title, label: სათაური, type: string, required: true }
+      - { name: date, label: თარიღი, type: date, required: true }
+      - { name: cover, label: ყდის ფოტო, type: image }
+      - { name: excerpt, label: "მოკლე შინაარსი (ჩანს ბარათზე)", type: text, required: true }
+      - { name: draft, label: "მონახაზი (არ გამოქვეყნდეს)", type: boolean, default: false }
+      - { name: example, label: ნიმუშია (ტესტური), type: boolean, default: false }
+      - { name: body, label: ტექსტი, type: rich-text }
   - name: settings
     label: საიტის პარამეტრები
     type: file
