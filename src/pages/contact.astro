@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE, waHref, phoneHref, igHref } from '../lib/site';
+const map = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(SITE.address)}`;
+---
+<Base title="კონტაქტი">
+<h1>კონტაქტი</h1>
+<ul class="ct">
+<li><span class="muted">ტელეფონი</span><a href={phoneHref()}>{SITE.phone}</a></li>
+<li><span class="muted">მისამართი</span><a href={map} target="_blank" rel="noopener">{SITE.address}</a></li>
+<li><span class="muted">სამუშაო საათები</span><span>{SITE.hours}</span></li>
+<li><span class="muted">Instagram</span><a href={igHref()}>@{SITE.instagram}</a></li>
+</ul>
+<a class="btn wa" href={waHref()}>მოგვწერე WhatsApp-ზე</a><a class="btn ph" href={phoneHref()}>დაგვირეკე</a><a class="btn ig" href={igHref()}>Instagram</a>
+</Base>
+<style>.ct{list-style:none;padding:0;margin:0 0 20px}.ct li{display:flex;flex-direction:column;padding:12px 0;border-bottom:1px solid var(--line)}.ct .muted{font-size:13px}.ct a{text-decoration:none}</style>
