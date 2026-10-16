@@ -5,11 +5,6 @@ export const CATEGORIES = {
   'spray-roses': 'სპრეი ვარდები',
   roses: 'ვარდები',
   'mixed-flowers': 'შერეული ყვავილები',
-  bouquets: 'თაიგულები',
-  boxes: 'ყუთები',
-  single: 'ცალი ყვავილები',
-  compositions: 'კომპოზიციები',
-  gifts: 'საჩუქრები',
 } as const;
 export type Cat = keyof typeof CATEGORIES;
 export const phoneHref = () => 'tel:' + SITE.phone.replace(/[^\d+]/g, '');

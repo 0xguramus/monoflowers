@@ -25,11 +25,6 @@ content:
             - { value: spray-roses, label: სპრეი ვარდები }
             - { value: roses, label: ვარდები }
             - { value: mixed-flowers, label: შერეული ყვავილები }
-            - { value: bouquets, label: თაიგულები }
-            - { value: boxes, label: ყუთები }
-            - { value: single, label: ცალი ყვავილები }
-            - { value: compositions, label: კომპოზიციები }
-            - { value: gifts, label: საჩუქრები }
       - name: images
         label: "ფოტოები (მაქს. 4, პირველი მთავარია)"
         description: "ატვირთე 1–4 ფოტო. სასურველია ვერტიკალური (4:5) ფორმატი. პირველი ფოტო ჩანს ბარათზე და კალათაში."
