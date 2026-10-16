@@ -2,27 +2,35 @@
 import Base from '../layouts/Base.astro';
 import ProductCard from '../components/ProductCard.astro';
 import { getCollection } from 'astro:content';
-import { SITE, CATEGORIES, gel, sortProducts } from '../lib/site';
+import { SITE, CATEGORIES } from '../lib/site';
 const all = await getCollection('products');
 const featured = all.filter(p => p.data.featured);
-const real = sortProducts(all.filter(p => p.data.available && !p.data.example && p.data.images?.length));
-const slides = [...real.filter(p => p.data.featured), ...real.filter(p => !p.data.featured && p.data.old_price), ...real.filter(p => !p.data.featured && !p.data.old_price)].slice(0, 6);
+const slides = (SITE as any).slides ?? [];
 ---
 <Base>
 <nav class="chips top-cats" aria-label="კატეგორიები"><a href="/catalog/" class="on">ყველა</a>{Object.entries(CATEGORIES).map(([k, v]) => <a href={`/catalog/${k}/`}>{v}</a>)}</nav>
-<section class="sl" aria-label="რჩეული თაიგულები"><div class="tr" id="tr">{slides.map((p, i) => <a class="sd" href={`/products/${p.id}/`}><img src={p.data.images[0]} alt={p.data.name} loading={i ? 'lazy' : 'eager'} /><span class="cap"><b>{p.data.name}</b><span>{p.data.old_price && <s>{gel(p.data.old_price)}</s>} {gel(p.data.price)}</span></span></a>)}</div>
-{slides.length > 1 && <div class="dots" id="dots">{slides.map((_, i) => <button type="button" aria-label={`სლაიდი ${i + 1}`} data-i={i} class={i ? '' : 'on'}></button>)}</div>}</section>
+<section class="hero" aria-label="მთავარი სლაიდები"><div class="tr" id="tr">{slides.map((s: any, i: number) => <div class="sd">
+<img src={s.image} alt="" loading={i ? 'lazy' : 'eager'} fetchpriority={i ? 'auto' : 'high'} />
+<div class="ov"><p class="t">{s.title}</p>{s.subtitle && <p class="st">{s.subtitle}</p>}{s.note && <p class="nt">{s.note}</p>}{s.button_text && <a class="cta" href={s.button_link || '/catalog/'}>{s.button_text}</a>}</div></div>)}</div>
+{slides.length > 1 && <div class="dots" id="dots">{slides.map((_: any, i: number) => <button type="button" aria-label={`სლაიდი ${i + 1}`} data-i={i} class={i ? '' : 'on'}></button>)}</div>}</section>
 <script is:inline>(function(){var t=document.getElementById("tr"),d=document.getElementById("dots");if(!t||!d)return;var b=d.children,n=b.length,c=0,tm;function go(i){t.scrollTo({left:i*t.clientWidth,behavior:"smooth"})}
 t.addEventListener("scroll",function(){var i=Math.round(t.scrollLeft/t.clientWidth);if(i!==c){c=i;for(var k=0;k<n;k++)b[k].classList.toggle("on",k===i)}},{passive:true});
 d.addEventListener("click",function(e){var x=e.target.closest("button");if(x){go(+x.dataset.i);rs()}});
-function rs(){clearInterval(tm);tm=setInterval(function(){go((c+1)%n)},4500)}t.addEventListener("touchstart",function(){clearInterval(tm)},{passive:true});t.addEventListener("touchend",rs,{passive:true});rs()})()</script>
+function rs(){clearInterval(tm);tm=setInterval(function(){go((c+1)%n)},5000)}t.addEventListener("touchstart",function(){clearInterval(tm)},{passive:true});t.addEventListener("touchend",function(){setTimeout(rs,3000)},{passive:true});rs()})()</script>
 <h2>რჩეული</h2><div class="grid">{featured.map(p => <ProductCard p={p} />)}</div>
 </Base>
 <style>
-.top-cats{margin-top:14px;padding-bottom:4px}.sl{margin:6px 0 0}.tr{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;border-radius:var(--r);scrollbar-width:none}.tr::-webkit-scrollbar{display:none}
-.sd{flex:0 0 100%;position:relative;aspect-ratio:16/9;scroll-snap-align:start;display:block;text-decoration:none;background:var(--photo)}.sd img{width:100%;height:100%;object-fit:cover;display:block}
-.cap{position:absolute;left:0;right:0;bottom:0;padding:28px 14px 12px;background:linear-gradient(transparent,rgba(20,4,4,.85));color:#f6ecd6;display:flex;justify-content:space-between;align-items:flex-end;gap:10px;font-size:14px}.cap b{font-size:16px}.cap s{opacity:.7;font-size:12px}
-.dots{display:flex;justify-content:center;gap:6px;margin-top:10px}.dots button{width:7px;height:7px;border-radius:4px;border:0;padding:0;background:var(--line);cursor:pointer;transition:width .2s}.dots button.on{width:20px;background:var(--ink)}
+.top-cats{margin-top:14px;padding-bottom:4px}.hero{position:relative;width:100vw;margin:6px 0 0 calc(50% - 50vw)}
+.tr{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}.tr::-webkit-scrollbar{display:none}
+.sd{flex:0 0 100%;position:relative;aspect-ratio:4/5;max-height:82vh;scroll-snap-align:start;scroll-snap-stop:always;background:#2a0a0c;overflow:hidden}@media(min-width:760px){.sd{aspect-ratio:16/7}}
+.sd img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.sd::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(25,5,6,.78),rgba(25,5,6,.35) 70%,rgba(25,5,6,.15)),linear-gradient(transparent 45%,rgba(25,5,6,.6))}
+.ov{position:absolute;z-index:1;left:0;right:0;bottom:0;padding:0 20px 64px;color:#f6ecd6;max-width:640px}@media(min-width:760px){.ov{left:max(20px,calc(50vw - 550px));padding:0 0 70px;top:50%;bottom:auto;transform:translateY(-50%)}}
+.t{font-size:30px;line-height:1.2;font-weight:700;margin:0 0 10px;text-shadow:0 2px 12px rgba(0,0,0,.35)}@media(min-width:760px){.t{font-size:44px}}
+.st{font-size:16px;margin:0 0 6px;line-height:1.45}.nt{font-size:13px;margin:0 0 18px;opacity:.85}
+.cta{display:inline-block;background:#760000;color:#f6ecd6;text-decoration:none;padding:13px 26px;border-radius:6px;font-weight:700;font-size:15px;box-shadow:0 4px 14px rgba(0,0,0,.3)}
+.dots{position:absolute;z-index:2;left:20px;bottom:24px;display:flex;gap:8px}@media(min-width:760px){.dots{left:max(20px,calc(50vw - 550px))}}
+.dots button{width:8px;height:8px;border-radius:4px;border:0;padding:0;background:rgba(246,236,214,.5);cursor:pointer;transition:width .25s}.dots button.on{width:26px;background:#760000;box-shadow:0 0 0 1px rgba(246,236,214,.6)}
 h2{margin:34px 0 14px;font-size:22px}
 .cats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.cats a{background:var(--card);padding:22px 14px;border-radius:var(--r);text-align:center;text-decoration:none;font-family:"BPG Mrgvlovani",sans-serif;border:1px solid var(--line)}
 </style>

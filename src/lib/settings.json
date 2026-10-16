@@ -27,5 +27,31 @@
       "price": 6
     }
   ],
-  "delivery_fee": 15
+  "delivery_fee": 15,
+  "slides": [
+    {
+      "image": "/images/products/classic-red-5.jpg",
+      "title": "სიყვარული ყვავილების ენით",
+      "subtitle": "ყოველ თაიგულს ხელით ვკრავთ ჩვენს მაღაზიაში, ვაკეში.",
+      "note": "ყოველდღე, 12:00–23:00",
+      "button_text": "კატალოგის ნახვა",
+      "button_link": "/catalog/"
+    },
+    {
+      "image": "/images/products/example-gallery-3.jpg",
+      "title": "წითელი ვარდები",
+      "subtitle": "კლასიკური თაიგულები ნებისმიერი განსაკუთრებული დღისთვის.",
+      "note": "5 ვარდიდან 101 ვარდამდე",
+      "button_text": "წითელი ვარდები",
+      "button_link": "/catalog/red-roses/"
+    },
+    {
+      "image": "/images/products/example-gallery-1.jpg",
+      "title": "შეუკვეთე მარტივად",
+      "subtitle": "დაამატე კალათაში და შეკვეთა WhatsApp-ით გაგვიგზავნე.",
+      "note": "მიტანა — 15 ₾ · ვაკე, ი. აბაშიძის ქ. 22",
+      "button_text": "შეკვეთა",
+      "button_link": "/catalog/"
+    }
+  ]
 }

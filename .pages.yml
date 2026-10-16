@@ -61,3 +61,14 @@ content:
         fields:
           - { name: name, label: დასახელება, type: string, required: true }
           - { name: price, label: ფასი (₾), type: number, required: true }
+      - name: slides
+        label: მთავარი გვერდის სლაიდები
+        type: object
+        list: true
+        fields:
+          - { name: image, label: ფოტო, type: image }
+          - { name: title, label: სათაური, type: string }
+          - { name: subtitle, label: ქვესათაური, type: string }
+          - { name: note, label: მცირე წარწერა, type: string }
+          - { name: button_text, label: ღილაკის ტექსტი, type: string }
+          - { name: button_link, label: "ღილაკის ბმული (მაგ. /catalog/)", type: string }
