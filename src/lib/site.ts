@@ -2,6 +2,7 @@ import s from './settings.json';
 export const SITE = s;
 export const CATEGORIES = {
   'red-roses': 'წითელი ვარდები',
+  'spray-roses': 'სპრეი ვარდები',
   bouquets: 'თაიგულები',
   boxes: 'ყუთები',
   single: 'ცალი ყვავილები',
