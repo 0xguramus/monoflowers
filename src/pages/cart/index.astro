@@ -4,7 +4,8 @@ import { SITE } from '../../lib/site';
 const extras = (SITE as any).extras ?? [];
 const note = (SITE as any).delivery_note ?? '';
 const fee = Number((SITE as any).delivery_fee ?? 0);
-const slots = ['12:00–14:00','14:00–16:00','16:00–18:00','18:00–20:00','20:00–22:00','22:00–23:00'];
+const hm = String(SITE.hours).match(/(\d{1,2}):(\d{2})\D+(\d{1,2}):(\d{2})/);
+const openH = hm ? +hm[1] : 12, closeH = hm ? +hm[3] : 23;
 ---
 <Base title="კალათა და შეკვეთა">
 <a class="back" href="/catalog/">‹ ყიდვების გაგრძელება</a>
@@ -20,9 +21,9 @@ const slots = ['12:00–14:00','14:00–16:00','16:00–18:00','18:00–20:00','
 <label><input type="radio" name="mode" value="pickup" /><span>მაღაზიიდან გატანა</span></label></div></fieldset>
 <label id="addrw">მიტანის მისამართი *<textarea name="address" rows="3" autocomplete="street-address"></textarea><span class="err" data-for="address"></span></label>
 <p id="shop" class="muted" hidden>გასატანი მისამართი: {SITE.address} ({SITE.hours})</p>
-<label>სასურველი თარიღი<input name="date" type="date" /><span class="err" data-for="date"></span></label>
+<label><span id="dlab">მიტანის თარიღი *</span><input name="date" type="date" required /><span class="err" data-for="date"></span></label>
 {note && <p class="hint muted">{note}</p>}
-<label>სასურველი დრო<select name="time"><option>ნებისმიერი დრო</option>{slots.map(s => <option>{s}</option>)}</select></label>
+<label><span id="tlab">მიტანის დრო *</span><select name="time" required></select><span class="err" data-for="time"></span></label>
 {extras.length > 0 && <fieldset><legend>დაამატე საჩუქარი</legend>
 {extras.map((x: any, i: number) => <label class="chk"><input type="checkbox" name="extra" value={i} data-name={x.name} data-price={x.price} /><span>{x.name} — {x.price} ₾</span></label>)}</fieldset>}
 <label>ბარათის ტექსტი (არასავალდებულო)<textarea name="card" rows="3"></textarea></label>
@@ -34,12 +35,22 @@ const slots = ['12:00–14:00','14:00–16:00','16:00–18:00','18:00–20:00','
 <p class="muted small">შეკვეთა WhatsApp-ში მზა შეტყობინების სახით გაიხსნება. მარაგსა და გადახდას იქ დაგიდასტურებთ.</p>
 <button type="button" id="clear" class="link">კალათის გასუფთავება</button></div>
 </form></div>
-<script is:inline define:vars={{ wa: SITE.whatsapp, shopAddr: SITE.address, fee }}>
+<script is:inline define:vars={{ wa: SITE.whatsapp, shopAddr: SITE.address, fee, openH, closeH }}>
 addEventListener("DOMContentLoaded",function(){
 var C=window.mfCart,f=document.getElementById("f");
 var fmt=function(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,"\u2009")+" ₾"};
 var esc=function(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML};
-var d=new Date();f.date.value=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");f.date.min=f.date.value;
+var iso=function(x){return x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0")};
+var p2=function(h){return String(h).padStart(2,"0")+":00"};
+var d=new Date(),today=iso(d),mx=new Date();mx.setDate(mx.getDate()+30);
+if(new Date().getHours()>=closeH-1){var tm=new Date();tm.setDate(tm.getDate()+1);f.date.value=iso(tm)}else f.date.value=today;
+f.date.min=today;f.date.max=iso(mx);
+function slots(){var prev=f.time.value,isT=f.date.value===today,now=new Date(),h="",n=0;
+for(var s=openH;s<closeH;s+=2){var e=Math.min(s+2,closeH);if(isT&&s<=now.getHours())continue;h+='<option>'+p2(s)+'–'+p2(e)+'</option>';n++}
+f.time.innerHTML=(n?'<option value="">აირჩიე დრო</option>':'<option value="">ამ დღისთვის თავისუფალი დრო აღარ არის</option>')+h;
+if(prev&&[].some.call(f.time.options,function(o){return o.value===prev}))f.time.value=prev}
+function labels(){var pk=f.mode.value==="pickup";document.getElementById("dlab").textContent=pk?"გატანის თარიღი *":"მიტანის თარიღი *";document.getElementById("tlab").textContent=pk?"გატანის დრო *":"მიტანის დრო *"}
+slots();f.date.addEventListener("change",slots);
 function extras(){return [].slice.call(f.querySelectorAll("[name=extra]:checked")).map(function(e){return{name:e.dataset.name,price:+e.dataset.price}})}
 function render(){var c=C.get();document.getElementById("empty").hidden=!!c.length;document.getElementById("full").hidden=!c.length;
 document.getElementById("items").innerHTML=c.map(function(i,k){return '<li><img src="'+esc(i.img||"/images/placeholder.svg")+'" alt=""><div class="in"><b>'+esc(i.name)+'</b><span class="muted">'+fmt(i.price)+'</span><div class="qty"><button type="button" data-q="-1" data-k="'+k+'" aria-label="შემცირება">−</button><span>'+i.q+'</span><button type="button" data-q="1" data-k="'+k+'" aria-label="გაზრდა">+</button><button type="button" class="rm" data-rm="'+k+'">წაშლა</button></div></div><b class="lt">'+fmt(i.price*i.q)+'</b></li>'}).join("");
@@ -49,15 +60,16 @@ ex.forEach(function(x){t+=x.price;h+='<p class="ln"><span>'+esc(x.name)+'</span>
 document.getElementById("lines").innerHTML=h;document.getElementById("total").textContent=fmt(t);return t}
 document.getElementById("items").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;var c=C.get();
 if(b.dataset.rm!=null)c.splice(+b.dataset.rm,1);else{var i=c[+b.dataset.k];i.q+=+b.dataset.q;if(i.q<1)c.splice(+b.dataset.k,1)}C.set(c);render()});
-f.addEventListener("change",function(){var p=f.mode.value==="pickup";document.getElementById("addrw").hidden=p;document.getElementById("shop").hidden=!p;render()});
+f.addEventListener("change",function(){var p=f.mode.value==="pickup";document.getElementById("addrw").hidden=p;document.getElementById("shop").hidden=!p;labels();render()});
 document.getElementById("clear").onclick=function(){if(confirm("გავასუფთაოთ კალათა?")){C.set([]);render()}};
-f.addEventListener("input",function(e){var n=e.target.name;if(n==="phone"||n==="address")err(n)});
+f.addEventListener("input",function(e){var n=e.target.name;if(n==="phone"||n==="address"||n==="time"||n==="date")err(n)});
 function err(n,m){var e=f.querySelector('[data-for='+n+']');e.textContent=m||"";f[n].classList.toggle("bad",!!m)}
 f.addEventListener("submit",function(e){e.preventDefault();var ok=true,ph=f.phone.value.replace(/[^\d+]/g,""),pk=f.mode.value==="pickup";
-err("phone");err("address");err("date");
+err("phone");err("address");err("date");err("time");
 if(ph.replace(/\D/g,"").length<9){err("phone",ph?"ტელეფონის ნომერი არასწორია. შეამოწმე, გთხოვ.":"გთხოვ, მიუთითე ტელეფონის ნომერი.");ok=false}
 if(!pk&&!f.address.value.trim()){err("address","გთხოვ, მიუთითე მიტანის მისამართი.");ok=false}
-if(!f.date.value){err("date","გთხოვ, აირჩიე თარიღი.");ok=false}
+if(!f.date.value||f.date.value<f.date.min||f.date.value>f.date.max){err("date","გთხოვ, აირჩიე თარიღი დღეიდან 30 დღის განმავლობაში.");ok=false}
+if(!f.time.value){err("time","გთხოვ, აირჩიე დრო.");ok=false}
 if(!ok){var b=f.querySelector(".bad");b&&b.focus();return}
 var c=C.get(),t=render(),L=["გამარჯობა! მსურს შეკვეთის გაფორმება:",""];
 c.forEach(function(i){L.push("• "+i.name+" — "+i.q+" × "+fmt(i.price)+" = "+fmt(i.price*i.q))});
@@ -68,7 +80,7 @@ if(f.name.value.trim())L.push("სახელი: "+f.name.value.trim());
 L.push("ტელეფონი: "+f.phone.value.trim());
 L.push(pk?"მიღება: მაღაზიიდან გატანა ("+shopAddr+")":"მიღება: მიტანა","");
 if(!pk)L.splice(L.length-1,0,"მისამართი: "+f.address.value.trim());
-var dd=f.date.value.split("-");L.push("თარიღი: "+dd[2]+"."+dd[1]+"."+dd[0]);L.push("დრო: "+f.time.value);
+var dd=f.date.value.split("-");L.push((pk?"გატანის":"მიტანის")+" თარიღი: "+dd[2]+"."+dd[1]+"."+dd[0]);L.push((pk?"გატანის":"მიტანის")+" დრო: "+f.time.value);
 if(f.card.value.trim())L.push("ბარათის ტექსტი: "+f.card.value.trim());
 if(f.notes.value.trim())L.push("შენიშვნა: "+f.notes.value.trim());
 var u="https://wa.me/"+wa+"?text="+encodeURIComponent(L.join("\n").replace(/\n\n$/,"\n"));window.__lastWa=u;window.open(u,"_blank")||(location.href=u)});

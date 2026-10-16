@@ -1,10 +1,10 @@
 ---
-import { gel } from '../lib/site';
+import { gel, CATEGORIES } from '../lib/site';
 const { p } = Astro.props; const d = p.data;
 const short = d.description.replace(/\s*\(ნიმუში[^)]*\)\s*/g, ' ').trim();
 const url = `/products/${p.id}/`;
 ---
-<article class="card" data-q={`${d.name} ${short}`.toLowerCase()}>
+<article class="card" data-q={`${d.name} ${short} ${CATEGORIES[d.category] ?? ""}`.toLowerCase()} data-price={d.price} data-o={d.order ?? 0}>
   <div class="img">
     <a href={url} tabindex="-1"><img src={d.images[0] ?? '/images/placeholder.svg'} alt={d.name} loading="lazy" /></a>
     <div class="badges">{!d.available && <span class="bd out">ამოიწურა</span>}{d.old_price && <span class="bd">ფასდაკლება</span>}{d.featured && <span class="bd">ჰიტი</span>}</div>

@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import ProductCard from '../components/ProductCard.astro';
 import { getCollection } from 'astro:content';
+import Recent from '../components/Recent.astro';
 import PostCard from '../components/PostCard.astro';
 import { getPosts } from '../lib/blog';
 import { SITE, CATEGORIES } from '../lib/site';
@@ -21,6 +22,7 @@ d.addEventListener("click",function(e){var x=e.target.closest("button");if(x){go
 function rs(){clearInterval(tm);tm=setInterval(function(){go((c+1)%n)},5000)}t.addEventListener("touchstart",function(){clearInterval(tm)},{passive:true});t.addEventListener("touchend",function(){setTimeout(rs,3000)},{passive:true});rs()})()</script>
 <nav class="chips top-cats" aria-label="კატეგორიები"><a href="/catalog/" class="on">ყველა</a>{Object.entries(CATEGORIES).map(([k, v]) => <a href={`/catalog/${k}/`}>{v}</a>)}</nav>
 <h2>რჩეული</h2><div class="grid">{featured.map(p => <ProductCard p={p} />)}</div>
+<Recent />
 {posts.length > 0 && <section class="blog"><div class="bh"><h2>ბლოგი</h2><a href="/blog/">ყველა სტატია ›</a></div><div class="pg">{posts.map(p => <PostCard p={p} />)}</div></section>}
 </Base>
 <style>

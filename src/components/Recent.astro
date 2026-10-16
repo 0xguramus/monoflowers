@@ -1,0 +1,19 @@
+---
+import { getCollection } from 'astro:content';
+import { gel } from '../lib/site';
+const { current = '' } = Astro.props;
+const all = await getCollection('products');
+const map = Object.fromEntries(all.map(p => [p.id, { n: p.data.name, p: gel(p.data.price), i: p.data.images[0] ?? '/images/placeholder.svg' }]));
+---
+<section class="rv" hidden data-cur={current}><h2>ბოლოს ნანახი</h2><div class="row"></div>
+<script is:inline type="application/json" class="rvdata" set:html={JSON.stringify(map)}></script></section>
+<script is:inline>(function(){document.querySelectorAll(".rv").forEach(function(s){var m=JSON.parse(s.querySelector(".rvdata").textContent),cur=s.dataset.cur,ids;try{ids=JSON.parse(localStorage.getItem("mfrecent"))||[]}catch(e){ids=[]}
+ids=ids.filter(function(i){return i!==cur&&m[i]}).slice(0,10);if(!ids.length)return;
+var e=function(x){var d=document.createElement("div");d.textContent=x;return d.innerHTML};
+s.querySelector(".row").innerHTML=ids.map(function(i){var p=m[i];return '<a class="ri" href="/products/'+encodeURIComponent(i)+'/"><img src="'+e(p.i)+'" alt="" loading="lazy"><b>'+e(p.n)+'</b><span>'+e(p.p)+'</span></a>'}).join("");s.hidden=false})})()</script>
+<style>
+.rv h2{margin:34px 0 12px;font-size:22px}.row{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x proximity;padding-bottom:6px;scrollbar-width:none}.row::-webkit-scrollbar{display:none}
+.row :global(.ri){flex:0 0 132px;scroll-snap-align:start;text-decoration:none;background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.row :global(.ri img){width:100%;aspect-ratio:4/5;object-fit:cover;display:block;background:var(--photo)}
+.row :global(.ri b){font-size:13px;color:var(--rose);margin:7px 9px 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.row :global(.ri span){font-size:13px;margin:0 9px 9px;font-weight:700}
+</style>
